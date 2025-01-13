@@ -1,5 +1,3 @@
-# BITS (Business Inventory Tracking System)
-
 ## Project Overview
 BITS is a Windows Forms application developed using C# and .NET that provides a simple and efficient way to manage inventory. The system offers essential functionalities for tracking products, including adding new stock, editing existing items, and managing inventory levels. This application is designed to help businesses maintain accurate records of their product inventory.
 

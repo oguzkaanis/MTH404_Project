@@ -30,11 +30,11 @@ namespace EnvanterTakip
             // Initialize username label
             lblUsername = new Label
             {
-                Text = $"Welcome, {currentUsername}",
-                Location = new Point(442, 12),
-                Size = new Size(200, 30),
+                Text = currentUsername,
+                Location = new Point(542, 12),
+                Size = new Size(120, 30),
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleCenter
+                TextAlign = ContentAlignment.MiddleRight
             };
 
             // Initialize Logout button
@@ -64,8 +64,8 @@ namespace EnvanterTakip
             // Add columns to DataGridView
             var skuColumn = new DataGridViewTextBoxColumn
             {
-                Name = "SKU Name",
-                HeaderText = "SKU Name",
+                Name = "SKUName",
+                HeaderText = "SKU  Name",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
                     Style = new DataGridViewCellStyle
@@ -77,8 +77,8 @@ namespace EnvanterTakip
             
             var productNameColumn = new DataGridViewTextBoxColumn
             {
-                Name = "Product Name",
-                HeaderText = "Product Name",
+                Name = "ProductName",
+                HeaderText = "Product  Name",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
                     Style = new DataGridViewCellStyle
@@ -121,7 +121,7 @@ namespace EnvanterTakip
             
             var quantityColumn = new DataGridViewTextBoxColumn
             {
-                Name = "Available Quantity",
+                Name = "Quantity",
                 HeaderText = "Available Quantity",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
