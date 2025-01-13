@@ -5,33 +5,56 @@ namespace EnvanterTakip
 {
     public partial class MainForm : Form
     {
+        private ProductsForm? currentProductsForm;
+        private bool isClosing = false;
+
         public MainForm()
         {
             InitializeComponent();
-            this.Visible = false;
+            this.ShowInTaskbar = false;
             ShowLoginForm();
         }
 
         private void ShowLoginForm()
         {
-            using (var loginForm = new LoginForm())
+            if (isClosing) return;
+
+            var loginForm = new LoginForm();
+            loginForm.FormClosed += (s, args) =>
             {
-                if (loginForm.ShowDialog() == DialogResult.OK)
+                if (loginForm.DialogResult == DialogResult.OK)
                 {
-                    ShowProductsForm();
+                    ShowProductsForm(loginForm.Username);
                 }
                 else
                 {
+                    isClosing = true;
                     Application.Exit();
                 }
-            }
+            };
+
+            loginForm.Show();
         }
 
-        private void ShowProductsForm()
+        private void ShowProductsForm(string username)
         {
-            var productsForm = new ProductsForm();
-            productsForm.Show();
-            this.Hide();
+            if (isClosing) return;
+
+            if (currentProductsForm != null && !currentProductsForm.IsDisposed)
+            {
+                currentProductsForm.Close();
+            }
+
+            currentProductsForm = new ProductsForm(username);
+            currentProductsForm.FormClosed += (s, args) => 
+            {
+                currentProductsForm = null;
+                if (!isClosing)
+                {
+                    ShowLoginForm();
+                }
+            };
+            currentProductsForm.Show();
         }
 
         protected override void SetVisibleCore(bool value)

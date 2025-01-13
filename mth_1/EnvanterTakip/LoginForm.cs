@@ -6,13 +6,15 @@ namespace EnvanterTakip
 {
     public partial class LoginForm : Form
     {
-        private TextBox txtUsername;
-        private TextBox txtPassword;
-        private Button btnLogin;
-        private Label lblEmail;
-        private Label lblPassword;
-        private Label lblTitle;
-        private Panel mainPanel;
+        private TextBox txtUsername = null!;
+        private TextBox txtPassword = null!;
+        private Button btnLogin = null!;
+        private Label lblEmail = null!;
+        private Label lblPassword = null!;
+        private Label lblTitle = null!;
+        private Panel mainPanel = null!;
+
+        public string Username => txtUsername.Text;
 
         public LoginForm()
         {

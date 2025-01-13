@@ -6,13 +6,18 @@ namespace EnvanterTakip
 {
     public partial class ProductsForm : Form
     {
-        private Button btnAddStock;
-        private Button btnEditStock;
-        private Button btnDeleteStock;
-        private DataGridView dgvProducts;
+        private Button btnAddStock = null!;
+        private Button btnEditStock = null!;
+        private Button btnDeleteStock = null!;
+        private Button btnLogout = null!;
+        private Label lblUsername = null!;
+        private DataGridView dgvProducts = null!;
+        private string currentUsername;
+        private bool isLoggingOut = false;
 
-        public ProductsForm()
+        public ProductsForm(string username)
         {
+            currentUsername = username;
             InitializeComponent();
             InitializeCustomComponents();
         }
@@ -22,6 +27,28 @@ namespace EnvanterTakip
             // Form properties
             this.Font = new Font("Segoe UI", 9F);
             
+            // Initialize username label
+            lblUsername = new Label
+            {
+                Text = $"Welcome, {currentUsername}",
+                Location = new Point(442, 12),
+                Size = new Size(200, 30),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            // Initialize Logout button
+            btnLogout = new Button
+            {
+                Text = "Logout",
+                Location = new Point(672, 12),
+                Size = new Size(100, 30),
+                BackColor = Color.FromArgb(108, 117, 125),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 9F)
+            };
+            btnLogout.Click += BtnLogout_Click;
+
             // Initialize DataGridView
             dgvProducts = new DataGridView
             {
@@ -37,7 +64,7 @@ namespace EnvanterTakip
             // Add columns to DataGridView
             var skuColumn = new DataGridViewTextBoxColumn
             {
-                Name = "SKUName",
+                Name = "SKU Name",
                 HeaderText = "SKU Name",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
@@ -50,7 +77,7 @@ namespace EnvanterTakip
             
             var productNameColumn = new DataGridViewTextBoxColumn
             {
-                Name = "ProductName",
+                Name = "Product Name",
                 HeaderText = "Product Name",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
@@ -94,7 +121,7 @@ namespace EnvanterTakip
             
             var quantityColumn = new DataGridViewTextBoxColumn
             {
-                Name = "Quantity",
+                Name = "Available Quantity",
                 HeaderText = "Available Quantity",
                 HeaderCell = new DataGridViewColumnHeaderCell
                 {
@@ -164,7 +191,9 @@ namespace EnvanterTakip
                 dgvProducts,
                 btnAddStock,
                 btnEditStock,
-                btnDeleteStock
+                btnDeleteStock,
+                btnLogout,
+                lblUsername
             });
             
             // Form properties
@@ -219,11 +248,11 @@ namespace EnvanterTakip
                 
                 // Pre-fill the form with existing values
                 addStockForm.PreFillData(
-                    row.Cells["SKUName"].Value.ToString(),
-                    row.Cells["ProductName"].Value.ToString(),
-                    row.Cells["Category"].Value.ToString(),
-                    decimal.Parse(row.Cells["Price"].Value.ToString()),
-                    int.Parse(row.Cells["Quantity"].Value.ToString())
+                    row.Cells["SKUName"].Value?.ToString() ?? "",
+                    row.Cells["ProductName"].Value?.ToString() ?? "",
+                    row.Cells["Category"].Value?.ToString() ?? "",
+                    decimal.Parse(row.Cells["Price"].Value?.ToString()?.Replace(" TL", "") ?? "0"),
+                    int.Parse(row.Cells["Quantity"].Value?.ToString() ?? "0")
                 );
 
                 if (addStockForm.ShowDialog() == DialogResult.OK)
@@ -259,10 +288,32 @@ namespace EnvanterTakip
             }
         }
 
+        private void BtnLogout_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to logout?", "Logout Confirmation",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                isLoggingOut = true;
+                this.Hide();
+                this.Close();
+            }
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            Application.Exit();
+            if (!isLoggingOut)
+            {
+                if (MessageBox.Show("Are you sure you want to exit the application?", "Exit Confirmation",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
         }
     }
-} 
+}
